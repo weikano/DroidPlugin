@@ -9,6 +9,8 @@ import com.morgoo.helper.Log;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,9 +70,9 @@ public class NativeLibraryHelperCompat {
 
             //在64位处理器中，如果导入的so库未包含64位的，比如只导入了armeabi，此时就会找不到该abi。
             //应该在32位abi中再次寻找。
+            Set<String> abis = getAbisFromApk(apkFile.getAbsolutePath());
             if (isVM64()) {
                 if (Build.SUPPORTED_64_BIT_ABIS.length > 0) {
-                    Set<String> abis = getAbisFromApk(apkFile.getAbsolutePath());
                     if (abis == null || abis.isEmpty()) {
                         return 0;
                     }
@@ -83,7 +85,6 @@ public class NativeLibraryHelperCompat {
             //如果abi为空，再次查找。
             if(abi == null){
                 if (Build.SUPPORTED_32_BIT_ABIS.length > 0) {
-                    Set<String> abis = getAbisFromApk(apkFile.getAbsolutePath());
                     if (abis == null || abis.isEmpty()) {
                         return 0;
                     }

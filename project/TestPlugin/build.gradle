@@ -13,6 +13,11 @@ dependencies {
 
 
 android {
+    defaultConfig {
+        ndk {
+            moduleName "placeholder"
+        }
+    }
     signingConfigs {
         MySignConfig {
             storeFile file(readProperty("key.store", "key.store"))
@@ -34,6 +39,8 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+            jniLibs.srcDirs = ['libs']
+//            jniLibs.srcDirs.add(new File('libs'))
         }
 
         instrumentTest.setRoot('tests')
@@ -50,6 +57,18 @@ android {
             signingConfig signingConfigs.MySignConfig
         }
     }
+
+//    task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
+//        destinationDir file("$projectDir/libs")
+//        baseName "Native_Libs2"
+//        extension "jar"
+//        from fileTree(dir: "libs", include: "**/*.so")
+//        into "lib"
+//    }
+//
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn(nativeLibsToJar)
+//    }
 }
 
 //
