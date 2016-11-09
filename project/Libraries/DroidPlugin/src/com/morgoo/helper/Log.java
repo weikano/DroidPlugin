@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Process;
 
+import com.morgoo.droidplugin.BuildConfig;
 import com.morgoo.droidplugin.hook.HookFactory;
 import com.morgoo.droidplugin.hook.proxy.LibCoreHook;
 
@@ -51,7 +52,7 @@ public class Log {
     private static final int ASSERT = android.util.Log.ASSERT;
     private static final long MAX_LOG_FILE = 1024 * 1024 * 8; //8MB
 
-    private static boolean sDebug = false;
+    private static boolean sDebug = true;
     private static boolean sFileLog = false;
     private static final SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private static final SimpleDateFormat sFormat1 = new SimpleDateFormat("yyyyMMdd");
@@ -63,7 +64,7 @@ public class Log {
 
     static {
         sFileLog = sDir.exists() && sDir.isDirectory();
-        sDebug = sFileLog;
+        sDebug = sFileLog || BuildConfig.DEBUG || true;
     }
 
     public static boolean isDebug() {

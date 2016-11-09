@@ -43,6 +43,7 @@ import com.morgoo.helper.compat.CompatibilityInfoCompat;
 import com.morgoo.helper.compat.QueuedWorkCompat;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -132,6 +133,7 @@ public class ServcesManager {
             method.setAccessible(true);
         }
         method.invoke(activityThread, data);
+
         Object mService = FieldUtils.readField(activityThread, "mServices");
         Service service = (Service) MethodUtils.invokeMethod(mService, "get", fakeToken);
         MethodUtils.invokeMethod(mService, "remove", fakeToken);

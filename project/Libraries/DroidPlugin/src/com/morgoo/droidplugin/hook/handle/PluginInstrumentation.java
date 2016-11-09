@@ -141,6 +141,9 @@ public class PluginInstrumentation extends Instrumentation {
                 if (valueObj instanceof ContentResolver) {
                     ContentResolver contentResolver = ((ContentResolver) valueObj);
                     Field mPackageName = FieldUtils.getDeclaredField(ContentResolver.class, "mPackageName", true);
+                    if(mPackageName == null){
+                        return;
+                    }
                     Object mPackageNameValueObj = mPackageName.get(contentResolver);
                     if (mPackageNameValueObj != null && mPackageNameValueObj instanceof String) {
                         String packageName = ((String) mPackageNameValueObj);

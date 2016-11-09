@@ -157,7 +157,10 @@ public class HookFactory {
             installHook(new ITelephonyRegistryBinderHook(context), classLoader);
         }
 
-        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+//        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+//            installHook(new ISubBinderHook(context), classLoader);
+//        }
+        if(VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP){
             installHook(new ISubBinderHook(context), classLoader);
         }
 
@@ -173,7 +176,8 @@ public class HookFactory {
             installHook(new ISmsBinderHook(context), classLoader);
         }
 
-        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+//        if (VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+        if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
             installHook(new IMmsBinderHook(context), classLoader);
         }
 
