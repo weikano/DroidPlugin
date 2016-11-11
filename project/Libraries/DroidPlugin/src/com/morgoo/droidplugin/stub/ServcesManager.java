@@ -38,6 +38,7 @@ import com.morgoo.droidplugin.core.PluginProcessManager;
 import com.morgoo.droidplugin.pm.PluginManager;
 import com.morgoo.droidplugin.reflect.FieldUtils;
 import com.morgoo.droidplugin.reflect.MethodUtils;
+import com.morgoo.helper.Log;
 import com.morgoo.helper.compat.ActivityThreadCompat;
 import com.morgoo.helper.compat.CompatibilityInfoCompat;
 import com.morgoo.helper.compat.QueuedWorkCompat;

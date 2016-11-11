@@ -18,6 +18,11 @@ android {
             moduleName "placeholder"
         }
     }
+
+    compileOptions {
+        incremental true
+    }
+
     signingConfigs {
         MySignConfig {
             storeFile file(readProperty("key.store", "key.store"))

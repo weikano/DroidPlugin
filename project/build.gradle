@@ -13,8 +13,19 @@ ext {
     buildToolsVersion = "23.0.1"
 }
 
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+        }
+
+    }
+}
+
 allprojects.each { p ->
     p.buildDir "bin"
+
 }
 
 task clean(type: Delete) {

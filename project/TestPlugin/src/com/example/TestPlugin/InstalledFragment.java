@@ -44,11 +44,15 @@ public class InstalledFragment extends ListFragment implements ServiceConnection
     public void onListItemClick(ListView l, View v, int position, long id) {
         ApkItem item = adapter.getItem(position);
         if (v.getId() == R.id.button2) {
+            if(PluginManager.getInstance().isConnected()){
+                PackageManager pm = getActivity().getPackageManager();
+                Intent intent = pm.getLaunchIntentForPackage(item.packageInfo.packageName);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }else{
+                Toast.makeText(getActivity(), "Not cannected yet", Toast.LENGTH_SHORT).show();
+            }
 
-            PackageManager pm = getActivity().getPackageManager();
-            Intent intent = pm.getLaunchIntentForPackage(item.packageInfo.packageName);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
         } else if (v.getId() == R.id.button3) {
             doUninstall(item);
         }
@@ -61,6 +65,11 @@ public class InstalledFragment extends ListFragment implements ServiceConnection
         builder.setNegativeButton("删除", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                try {
+                    PluginManager.getInstance().killApplicationProcess(item.packageInfo.packageName);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 if (!PluginManager.getInstance().isConnected()) {
                     Toast.makeText(getActivity(), "服务未连接", Toast.LENGTH_SHORT).show();
                 } else {
