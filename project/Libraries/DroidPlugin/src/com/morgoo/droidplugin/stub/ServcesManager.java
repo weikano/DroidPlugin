@@ -35,6 +35,7 @@ import android.os.IBinder;
 
 import com.morgoo.droidplugin.core.Env;
 import com.morgoo.droidplugin.core.PluginProcessManager;
+import com.morgoo.droidplugin.hook.handle.PluginInstrumentation;
 import com.morgoo.droidplugin.pm.PluginManager;
 import com.morgoo.droidplugin.reflect.FieldUtils;
 import com.morgoo.droidplugin.reflect.MethodUtils;
@@ -128,7 +129,7 @@ public class ServcesManager {
         if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
             FieldUtils.writeField(data, "compatInfo", CompatibilityInfoCompat.DEFAULT_COMPATIBILITY_INFO());
         }
-
+        Log.i(PluginInstrumentation.TAG, "ServcesManager handleCreateServiceOne");
         Method method = activityThread.getClass().getDeclaredMethod("handleCreateService", CreateServiceData);
         if (!method.isAccessible()) {
             method.setAccessible(true);

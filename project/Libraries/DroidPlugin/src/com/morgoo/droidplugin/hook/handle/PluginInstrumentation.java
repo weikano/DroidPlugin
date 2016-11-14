@@ -56,7 +56,7 @@ import java.lang.reflect.Field;
  */
 public class PluginInstrumentation extends Instrumentation {
 
-    protected static final String TAG = PluginInstrumentation.class.getSimpleName();
+    public static final String TAG = PluginInstrumentation.class.getSimpleName();
 
     protected Instrumentation mTarget;
     private final Context mHostContext;
@@ -252,6 +252,7 @@ public class PluginInstrumentation extends Instrumentation {
 
     @Override
     public void callApplicationOnCreate(Application app) {
+        Log.i(TAG, PluginInstrumentation.class.getSimpleName() +" callApplicationOnCreate");
         if (enable) {
             IPackageManagerHook.fixContextPackageManager(app);
             try {

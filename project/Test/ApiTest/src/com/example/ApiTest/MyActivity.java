@@ -3,6 +3,7 @@ package com.example.ApiTest;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,6 +23,11 @@ public class MyActivity extends AppCompatActivity implements OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        PackageManager pm = getPackageManager();
+        Intent intent = new Intent("test");
+        intent.setPackage(getPackageName());
+        List<ResolveInfo> receivers = pm.queryBroadcastReceivers(intent, 0);
+        assert receivers != null;
         findViewById(R.id.button1).setOnClickListener(this);
         findViewById(R.id.button2).setOnClickListener(this);
         findViewById(R.id.button3).setOnClickListener(this);

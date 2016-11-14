@@ -25,6 +25,8 @@ package com.morgoo.droidplugin;
 import android.app.Application;
 import android.content.Context;
 
+import com.morgoo.droidplugin.hook.handle.PluginInstrumentation;
+
 /**
  * Created by Andy Zhang(zhangyong232@gmail.com) 2014/12/5.
  */

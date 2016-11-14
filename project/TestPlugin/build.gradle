@@ -74,6 +74,7 @@ android {
 //    tasks.withType(JavaCompile) {
 //        compileTask -> compileTask.dependsOn(nativeLibsToJar)
 //    }
+    buildToolsVersion '25.0.0'
 }
 
 //

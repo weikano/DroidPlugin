@@ -54,6 +54,7 @@ import com.morgoo.droidplugin.pm.parser.IntentMatcher;
 import com.morgoo.droidplugin.pm.parser.PluginPackageParser;
 import com.morgoo.helper.Log;
 import com.morgoo.helper.Utils;
+import com.morgoo.helper.compat.ActivityThreadCompat;
 import com.morgoo.helper.compat.NativeLibraryHelperCompat;
 import com.morgoo.helper.compat.PackageManagerCompat;
 
@@ -918,6 +919,10 @@ public class IPluginManagerImpl extends IPluginManager.Stub {
             handleException(e);
             return PackageManagerCompat.INSTALL_FAILED_INTERNAL_ERROR;
         }
+//        finally {
+//            Object mPackages = ActivityThreadCompat.getPackageManagerServicePackages();
+//            Log.i(TAG, mPackages.toString());
+//        }
     }
 
     private void dexOpt(Context hostContext, String apkfile, PluginPackageParser parser) throws Exception {

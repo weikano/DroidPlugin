@@ -24,11 +24,14 @@ package com.morgoo.helper.compat;
 
 import android.app.Instrumentation;
 import android.os.Handler;
+import android.os.IInterface;
 import android.os.Looper;
 
 import com.morgoo.droidplugin.reflect.MethodUtils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -90,4 +93,33 @@ public class ActivityThreadCompat {
         Object obj = currentActivityThread();
         return (Instrumentation) MethodUtils.invokeMethod(obj, "getInstrumentation");
     }
+
+//    public static Object getPackageManagerServicePackages() {
+//        try {
+//            Class clazz = activityThreadClass();
+//            Method getPackageManagerMethod = clazz.getDeclaredMethod("getPackageManager");
+//            getPackageManagerMethod.setAccessible(true);
+//            Object sPackageManager = getPackageManagerMethod.invoke(null);
+//            if(sPackageManager != null) {
+//                if(sPackageManager instanceof IInterface){
+//                    sPackageManager = ((IInterface) sPackageManager).asBinder();
+//                }
+//                Class packageManagerServiceClazz = Class.forName("com.android.server.pm.PackageManagerService");
+//                Field mPackages = packageManagerServiceClazz.getDeclaredField("mPackages");
+//                mPackages.setAccessible(true);
+//                return mPackages.get(sPackageManager);
+//            }
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchFieldException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 }
