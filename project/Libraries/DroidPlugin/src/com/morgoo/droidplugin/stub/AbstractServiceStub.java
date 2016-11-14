@@ -25,7 +25,6 @@ package com.morgoo.droidplugin.stub;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 
 import com.morgoo.helper.Log;
@@ -36,7 +35,7 @@ import com.morgoo.helper.Log;
 public abstract class AbstractServiceStub extends Service {
     private static final String TAG = "AbstractServiceStub";
 
-    private static ServcesManager mCreator = ServcesManager.getDefault();
+    private static ServicesManager mCreator = ServicesManager.getDefault();
 
     private boolean isRunning = false;
 
@@ -74,7 +73,7 @@ public abstract class AbstractServiceStub extends Service {
             if (intent != null) {
                 if (intent.getBooleanExtra("ActionKillSelf", false)) {
                     startKillSelf();
-                    if (!ServcesManager.getDefault().hasServiceRunning()) {
+                    if (!ServicesManager.getDefault().hasServiceRunning()) {
                         stopSelf(startId);
                         boolean stopService = getApplication().stopService(intent);
                         Log.i(TAG, "doGc Kill Process(pid=%s,uid=%s has exit) for %s onStart=%s intent=%s", android.os.Process.myPid(), android.os.Process.myUid(), getClass().getSimpleName(), stopService, intent);

@@ -45,7 +45,6 @@ import com.morgoo.helper.compat.CompatibilityInfoCompat;
 import com.morgoo.helper.compat.QueuedWorkCompat;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,21 +52,21 @@ import java.util.Map;
 /**
  * Created by Andy Zhang(zhangyong232@gmail.com) on 2015/2/9.
  */
-public class ServcesManager {
+public class ServicesManager {
 
     private Map<Object, Service> mTokenServices = new HashMap<Object, Service>();
     private Map<String, Service> mNameService = new HashMap<String, Service>();
     private Map<Object, Integer> mServiceTaskIds = new HashMap<Object, Integer>();
 
-    private ServcesManager() {
+    private ServicesManager() {
     }
 
-    private static ServcesManager sServcesManager;
+    private static ServicesManager sServcesManager;
 
-    public static ServcesManager getDefault() {
-        synchronized (ServcesManager.class) {
+    public static ServicesManager getDefault() {
+        synchronized (ServicesManager.class) {
             if (sServcesManager == null) {
-                sServcesManager = new ServcesManager();
+                sServcesManager = new ServicesManager();
             }
         }
         return sServcesManager;
@@ -111,6 +110,7 @@ public class ServcesManager {
         //            activityThread.handleCreateServiceOne(data);
         //            service = activityThread.mTokenServices.get(fakeToken);
         //            activityThread.mTokenServices.remove(fakeToken);
+        Log.i(PluginProcessManager.TAG, "Thread # " + Thread.currentThread().getName() +", handleCreateServiceOne " );
         ResolveInfo resolveInfo = hostContext.getPackageManager().resolveService(stubIntent, 0);
         ServiceInfo stubInfo = resolveInfo != null ? resolveInfo.serviceInfo : null;
         PluginManager.getInstance().reportMyProcessName(stubInfo.processName, info.processName, info.packageName);
@@ -129,7 +129,8 @@ public class ServcesManager {
         if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
             FieldUtils.writeField(data, "compatInfo", CompatibilityInfoCompat.DEFAULT_COMPATIBILITY_INFO());
         }
-        Log.i(PluginInstrumentation.TAG, "ServcesManager handleCreateServiceOne");
+        FieldUtils.writeField(data, "intent", stubIntent);
+        Log.i(PluginInstrumentation.TAG, "ServicesManager handleCreateServiceOne");
         Method method = activityThread.getClass().getDeclaredMethod("handleCreateService", CreateServiceData);
         if (!method.isAccessible()) {
             method.setAccessible(true);
@@ -242,8 +243,10 @@ public class ServcesManager {
 
     public int onStart(Context context, Intent intent, int flags, int startId) throws Exception {
         Intent targetIntent = intent.getParcelableExtra(Env.EXTRA_TARGET_INTENT);
+        Log.i(PluginProcessManager.TAG, "Service # " + targetIntent);
         if (targetIntent != null) {
             ServiceInfo targetInfo = PluginManager.getInstance().resolveServiceInfo(targetIntent, 0);
+            Log.i(PluginProcessManager.TAG, "Service # " + targetInfo);
             if (targetInfo != null) {
                 Service service = mNameService.get(targetInfo.name);
                 if (service == null) {
@@ -270,8 +273,10 @@ public class ServcesManager {
 
     public IBinder onBind(Context context, Intent intent) throws Exception {
         Intent targetIntent = intent.getParcelableExtra(Env.EXTRA_TARGET_INTENT);
+        Log.i(PluginProcessManager.TAG, "Service # " + targetIntent);
         if (targetIntent != null) {
             ServiceInfo info = PluginManager.getInstance().resolveServiceInfo(targetIntent, 0);
+            Log.i(PluginProcessManager.TAG, "Service # " + info);
             Service service = mNameService.get(info.name);
             if (service == null) {
                 handleCreateServiceOne(context, intent, info);

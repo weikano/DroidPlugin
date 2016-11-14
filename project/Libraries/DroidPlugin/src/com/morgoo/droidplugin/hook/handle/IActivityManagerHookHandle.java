@@ -62,7 +62,7 @@ import com.morgoo.droidplugin.reflect.FieldUtils;
 import com.morgoo.droidplugin.reflect.MethodUtils;
 import com.morgoo.droidplugin.reflect.Utils;
 import com.morgoo.droidplugin.stub.MyFakeIBinder;
-import com.morgoo.droidplugin.stub.ServcesManager;
+import com.morgoo.droidplugin.stub.ServicesManager;
 import com.morgoo.droidplugin.stub.ShortcutProxyActivity;
 import com.morgoo.helper.Log;
 import com.morgoo.helper.MyProxy;
@@ -991,7 +991,7 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
                 Intent intent = (Intent) args[index];
                 ServiceInfo info = resolveService(intent);
                 if (info != null && isPackagePlugin(info.packageName)) {
-                    int re = ServcesManager.getDefault().stopService(mHostContext, intent);
+                    int re = ServicesManager.getDefault().stopService(mHostContext, intent);
                     setFakedResult(re);
                     return true;
                 }
@@ -1016,7 +1016,7 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
                 if (isComponentNamePlugin(componentName)) {
                     IBinder token = (IBinder) args[1];
                     Integer startId = (Integer) args[2];
-                    boolean re = ServcesManager.getDefault().stopServiceToken(componentName, token, startId);
+                    boolean re = ServicesManager.getDefault().stopServiceToken(componentName, token, startId);
                     setFakedResult(re);
                     return true;
                 }

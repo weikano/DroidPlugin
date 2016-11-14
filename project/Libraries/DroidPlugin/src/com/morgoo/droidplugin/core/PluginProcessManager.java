@@ -70,7 +70,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class PluginProcessManager {
 
 
-    private static final String TAG = "PluginProcessManager";
+    public static final String TAG = "PluginProcessManager";
 
     private static String sCurrentProcessName;
     private static Object sGetCurrentProcessNameLock = new Object();
@@ -299,6 +299,7 @@ public class PluginProcessManager {
                 }
             }
         }
+        Log.i(TAG, "Thread # " + Thread.currentThread().getName() +", registerStaticReceiver " );
     }
 
     public static void setHookEnable(boolean enable) {
