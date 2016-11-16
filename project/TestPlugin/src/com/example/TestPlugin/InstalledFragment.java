@@ -43,8 +43,14 @@ public class InstalledFragment extends ListFragment implements ServiceConnection
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         ApkItem item = adapter.getItem(position);
+        boolean available = false;
+        try {
+            available = PluginManager.getInstance().isPluginPackage(item.packageInfo.packageName);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         if (v.getId() == R.id.button2) {
-            if(PluginManager.getInstance().isConnected()){
+            if(PluginManager.getInstance().isConnected() && available){
                 PackageManager pm = getActivity().getPackageManager();
                 Intent intent = pm.getLaunchIntentForPackage(item.packageInfo.packageName);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -61,6 +61,9 @@ public class MyCrashHandler implements UncaughtExceptionHandler {
     }
 
     public void register(Context context) {
+        if(BuildConfig.DEBUG){
+            return;
+        }
         if (context != null) {
             mOldHandler = Thread.getDefaultUncaughtExceptionHandler();
             if (mOldHandler != this) {

@@ -8,13 +8,16 @@ import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class JPushService extends Service {
     private static final String TAG = JPushService.class.getSimpleName();
+    private ArrayList<String> test;
 
     public JPushService() {
+        test = new ArrayList<>();
         Log.i(TAG, "JPushService: onCreate ");
     }
 
@@ -27,12 +30,10 @@ public class JPushService extends Service {
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
         Log.i(TAG, "onStart: ");
-        PackageManager pm = getPackageManager();
-        Intent test = new Intent("test");
-//        test.setPackage(getPackageName());
-        Iterator<ResolveInfo> iter = pm.queryBroadcastReceivers(test, 0).iterator();
-
-//        assert list != null;
+        test.iterator();
+//        PackageManager pm = getPackageManager();
+//        Intent test = new Intent("test");
+//        Iterator<ResolveInfo> iter = pm.queryBroadcastReceivers(test, 0).iterator();
     }
 
     @Override

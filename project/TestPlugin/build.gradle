@@ -57,6 +57,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), "proguard-project.txt"
+        }
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), "proguard-project.txt"
             signingConfig signingConfigs.MySignConfig
