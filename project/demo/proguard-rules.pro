@@ -18,8 +18,30 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
+
+-libraryjars lib/layoutlib.jar
+
+-keepclasseswithmembers public class * {
+    public static void main(java.lang.String[]);
+}
+
+-keepclasseswithmembers public class com.morgoo.hook.NativeHelper {
+      *** nativeHandleHookedMethod(...);
+      *** nativeHa(...);
+      *** nativeHb(...);
+      *** nativeHc(...);
+      *** nativeHd(...);
+      *** nativeHe(...);
+}
+
+-dontwarn com.morgoo.**
+-keep class com.morgoo.** { ;}
+-keep class android.util.Singleton{;}
+-keep class android.app.IServiceConnection{*;}
+
+
