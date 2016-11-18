@@ -23,6 +23,8 @@
 package com.morgoo.droidplugin.hook;
 
 import android.content.Context;
+import android.text.TextUtils;
+
 import com.morgoo.helper.Log;
 
 import java.lang.reflect.Method;
@@ -45,6 +47,9 @@ public class HookedMethodHandler {
         try {
             mUseFakedResult = false;
             mFakedResult = null;
+            if(TextUtils.equals("queryBroadcastReceivers", method.getName())){
+                Log.i(TAG, "queryBroadcastReceivers");
+            }
             boolean suc = beforeInvoke(receiver, method, args);
             Object invokeResult = null;
             if (!suc) {

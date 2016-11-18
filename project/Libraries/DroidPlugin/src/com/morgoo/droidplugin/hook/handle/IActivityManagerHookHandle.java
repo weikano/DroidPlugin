@@ -71,6 +71,7 @@ import com.morgoo.helper.compat.ContentProviderHolderCompat;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -113,6 +114,8 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
         sHookedMethodHandlers.put("publishContentProviders", new publishContentProviders(mHostContext));
         sHookedMethodHandlers.put("getRunningServiceControlPanel", new getRunningServiceControlPanel(mHostContext));
         sHookedMethodHandlers.put("startService", new startService(mHostContext));
+        sHookedMethodHandlers.put("startServiceAsUser", new startServiceAsUser(mHostContext));
+
         sHookedMethodHandlers.put("stopService", new stopService(mHostContext));
         sHookedMethodHandlers.put("stopServiceToken", new stopServiceToken(mHostContext));
         sHookedMethodHandlers.put("setServiceForeground", new setServiceForeground(mHostContext));
@@ -955,12 +958,16 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
             //API 17, 18, 19, 21
         /*public ComponentName startService(IApplicationThread caller, Intent service,
             String resolvedType, int userId) throws RemoteException;*/
+
+            Log.i(TAG, getClass().getSimpleName()+"#beforeInvoke " + Arrays.asList(args));
             info = replaceFirstServiceIntentOfArgs(args);
+            Log.i(TAG, getClass().getSimpleName()+"#beforeInvoke " + Arrays.asList(args));
             return super.beforeInvoke(receiver, method, args);
         }
 
         @Override
         protected void afterInvoke(Object receiver, Method method, Object[] args, Object invokeResult) throws Throwable {
+            Log.i(TAG, getClass() +"#afterInvoke " + invokeResult +", " + Arrays.asList(args));
             if (invokeResult instanceof ComponentName) {
                 if (info != null) {
                     setFakedResult(new ComponentName(info.packageName, info.name));
@@ -968,6 +975,13 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
             }
             info = null;
             super.afterInvoke(receiver, method, args, invokeResult);
+        }
+    }
+
+    private static class startServiceAsUser extends startService {
+
+        public startServiceAsUser(Context hostContext) {
+            super(hostContext);
         }
     }
 

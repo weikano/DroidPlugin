@@ -51,6 +51,7 @@ import com.morgoo.helper.compat.ParceledListSliceCompat;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -73,6 +74,7 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
         sHookedMethodHandlers.put("canonicalToCurrentPackageNames", new canonicalToCurrentPackageNames(mHostContext));
         sHookedMethodHandlers.put("getPermissionInfo", new getPermissionInfo(mHostContext));
         sHookedMethodHandlers.put("queryPermissionsByGroup", new queryPermissionsByGroup(mHostContext));
+        sHookedMethodHandlers.put("queryBroadcastReceivers", new queryBroadcastReceivers(mHostContext));
         sHookedMethodHandlers.put("getPermissionGroupInfo", new getPermissionGroupInfo(mHostContext));
         sHookedMethodHandlers.put("getAllPermissionGroups", new getAllPermissionGroups(mHostContext));
         sHookedMethodHandlers.put("getApplicationInfo", new getApplicationInfo(mHostContext));
@@ -298,6 +300,19 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
                 }
             }
             super.afterInvoke(receiver, method, args, invokeResult);
+        }
+    }
+
+    private class queryBroadcastReceivers extends HookedMethodHandler {
+
+        public queryBroadcastReceivers(Context hostContext) {
+            super(hostContext);
+        }
+
+        @Override
+        protected boolean beforeInvoke(Object receiver, Method method, Object[] args) throws Throwable {
+            Log.i(TAG,getClass() +"#beforeInvoke " + Arrays.asList(args));
+            return super.beforeInvoke(receiver, method, args);
         }
     }
 
