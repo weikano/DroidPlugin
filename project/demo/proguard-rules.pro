@@ -41,7 +41,7 @@
 
 -dontwarn com.morgoo.**
 -keep class com.morgoo.** { ;}
--keep class android.util.Singleton{;}
+-keep class android.util.Singleton { ;}
 -keep class android.app.IServiceConnection{*;}
 
 
