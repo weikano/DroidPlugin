@@ -18,6 +18,10 @@ public class HttpResponse {
         desc = json.optString("desc");
     }
 
+    public boolean isOk (){
+        return status == OK;
+    }
+
     public JSONObject getContent() {
         return content;
     }

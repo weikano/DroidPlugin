@@ -1,6 +1,7 @@
 package com.wkswind.demo.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.wkswind.demo.BuildConfig;
 
@@ -48,7 +49,7 @@ public final class HttpExecutor {
         });
     }
 
-    public static Observable<String> postString(final Context context, final int cmd, final HashMap<String, Object> params) {
+    private static Observable<String> postString(final Context context, final int cmd, final HashMap<String, Object> params) {
         params.put("v_cmd", cmd);
         params.put("v_class", cmd / 100 * 100);
         return Observable.create(new Observable.OnSubscribe<String>() {
