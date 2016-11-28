@@ -38,7 +38,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Parcelable;
-import android.os.RemoteException;
 import android.text.TextUtils;
 
 import com.morgoo.droidplugin.hook.BaseHookHandle;
@@ -74,7 +73,7 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
         sHookedMethodHandlers.put("canonicalToCurrentPackageNames", new canonicalToCurrentPackageNames(mHostContext));
         sHookedMethodHandlers.put("getPermissionInfo", new getPermissionInfo(mHostContext));
         sHookedMethodHandlers.put("queryPermissionsByGroup", new queryPermissionsByGroup(mHostContext));
-        sHookedMethodHandlers.put("queryBroadcastReceivers", new queryBroadcastReceivers(mHostContext));
+//        sHookedMethodHandlers.put("queryBroadcastReceivers", new queryBroadcastReceivers(mHostContext));
         sHookedMethodHandlers.put("getPermissionGroupInfo", new getPermissionGroupInfo(mHostContext));
         sHookedMethodHandlers.put("getAllPermissionGroups", new getAllPermissionGroups(mHostContext));
         sHookedMethodHandlers.put("getApplicationInfo", new getApplicationInfo(mHostContext));
@@ -300,19 +299,6 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
                 }
             }
             super.afterInvoke(receiver, method, args, invokeResult);
-        }
-    }
-
-    private class queryBroadcastReceivers extends HookedMethodHandler {
-
-        public queryBroadcastReceivers(Context hostContext) {
-            super(hostContext);
-        }
-
-        @Override
-        protected boolean beforeInvoke(Object receiver, Method method, Object[] args) throws Throwable {
-            Log.i(TAG,getClass() +"#beforeInvoke " + Arrays.asList(args));
-            return super.beforeInvoke(receiver, method, args);
         }
     }
 
@@ -776,6 +762,10 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
         /*  public List<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags) throws RemoteException;*/
             //API 4.1.1_r1, 4.2_r1, 4.3_r1, 4.4_r1, 5.0.2_r1
         /*public List<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;*/
+        if(invokeResult == null) {
+            invokeResult = new ArrayList<ResolveInfo>();
+        }
+        Log.i(queryIntentReceivers.class.getSimpleName(), String.valueOf(invokeResult));
             if (args != null && invokeResult instanceof List) {
                 final int index0 = 0, index1 = 1, index2 = 2;
                 Intent intent = null;
