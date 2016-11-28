@@ -762,23 +762,25 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
         /*  public List<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags) throws RemoteException;*/
             //API 4.1.1_r1, 4.2_r1, 4.3_r1, 4.4_r1, 5.0.2_r1
         /*public List<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId) throws RemoteException;*/
-        if(invokeResult == null) {
-            invokeResult = new ArrayList<ResolveInfo>();
-        }
-        Log.i(queryIntentReceivers.class.getSimpleName(), String.valueOf(invokeResult));
+            if (invokeResult == null) {
+                invokeResult = new ArrayList<ResolveInfo>();
+            }
+            Log.i(queryIntentReceivers.class.getSimpleName(), String.valueOf(invokeResult));
             if (args != null && invokeResult instanceof List) {
                 final int index0 = 0, index1 = 1, index2 = 2;
                 Intent intent = null;
                 if (args.length > index0) {
                     if (args[index0] instanceof Intent) {
                         intent = (Intent) args[index0];
+                        Log.i(queryIntentReceivers.class.getSimpleName(), String.valueOf(intent));
                     }
                 }
 
                 String resolvedType = null;
                 if (args.length > index1) {
-                    if (args[index1] instanceof String) {
+                    if (args[index1] != null && args[index1] instanceof String) {
                         resolvedType = (String) args[index1];
+                        Log.i(queryIntentReceivers.class.getSimpleName(), String.valueOf(resolvedType));
                     }
                 }
 
@@ -791,11 +793,12 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
 
                 if (intent != null) {
                     List<ResolveInfo> infos = PluginManager.getInstance().queryIntentReceivers(intent, resolvedType, flags);
+                    List old = (List) invokeResult;
                     if (infos != null && infos.size() > 0) {
-                        List old = (List) invokeResult;
                         old.addAll(infos);
-                        setFakedResult(invokeResult);
+//                        setFakedResult(invokeResult);
                     }
+                    setFakedResult(old);
                 }
             }
             super.afterInvoke(receiver, method, args, invokeResult);
@@ -1019,7 +1022,7 @@ public class IPackageManagerHookHandle extends BaseHookHandle {
                         }
                     }
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             super.afterInvoke(receiver, method, args, invokeResult);

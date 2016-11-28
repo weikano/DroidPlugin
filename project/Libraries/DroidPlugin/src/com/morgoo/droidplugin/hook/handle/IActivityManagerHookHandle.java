@@ -554,7 +554,7 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
 
     private static class broadcastIntent extends ReplaceCallingPackageHookedMethodHandler {
 
-        public broadcastIntent(Context hostContext) {
+        private broadcastIntent(Context hostContext) {
             super(hostContext);
         }
 
