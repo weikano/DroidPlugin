@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">传奇枭雄</string>
     <string name="launch_game">在线直接运行传奇枭雄</string>
-    <string name="download">加载游戏资源……</string>
-    <string name="install">加载游戏资源……</string>
+    <string name="download">游戏资源加载中…</string>
+    <string name="install">游戏资源加载中…</string>
     <string name="install_success">加载完成</string>
     <string name="install_failed">加载失败</string>
     <string name="install_failed_permission">权限不够</string>

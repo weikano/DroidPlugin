@@ -37,7 +37,7 @@ class Utils {
     static void createShortCut(Context context, String path) {
         PackageManager pm = context.getPackageManager();
         PackageInfo info = pm.getPackageArchiveInfo(path, 0);
-        Intent shortcutIntent = new Intent(context, MainActivity.class);
+        Intent shortcutIntent = new Intent(context, LaunchActivity.class);
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         shortcutIntent.putExtra(OnlineItem.class.getName(), path);
