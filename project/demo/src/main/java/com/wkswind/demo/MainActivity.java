@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.liulishuo.filedownloader.FileDownloader;
-import com.morgoo.droidplugin.pm.PluginManager;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
