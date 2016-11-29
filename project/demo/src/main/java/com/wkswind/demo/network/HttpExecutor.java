@@ -1,7 +1,6 @@
 package com.wkswind.demo.network;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.wkswind.demo.BuildConfig;
 

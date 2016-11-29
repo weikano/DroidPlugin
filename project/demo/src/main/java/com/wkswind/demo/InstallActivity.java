@@ -1,12 +1,10 @@
 package com.wkswind.demo;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.RemoteException;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ImageView;
+import android.os.RemoteException;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,11 +18,10 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class InstallActivity extends AppCompatActivity {
+public class InstallActivity extends Activity {
     private OnlineItem item;
 
     private TextView label;
-    private ImageView background;
     private ProgressBar progressBar;
     private Subscriber<Integer> subscriber;
     private PackageManager pm;
@@ -34,7 +31,6 @@ public class InstallActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_install);
         pm = getPackageManager();
-        background = (ImageView) findViewById(R.id.background);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         label = (TextView) findViewById(R.id.info);
         subscriber = new Subscriber<Integer>() {
@@ -53,7 +49,7 @@ public class InstallActivity extends AppCompatActivity {
                 switch (integer) {
                     case PackageManagerCompat.INSTALL_SUCCEEDED:
                         label.setText(R.string.install_success);
-                        Utils.createShortCut(InstallActivity.this, path);
+//                        Utils.createShortCut(InstallActivity.this, path);
                         launch(path);
                         finish();
                         break;
@@ -66,10 +62,6 @@ public class InstallActivity extends AppCompatActivity {
                     default:
                         return;
                 }
-//                if(integer == PackageManagerCompat.INSTALL_SUCCEEDED) {
-//                    launch(path);
-//                    Utils.createShortCut(InstallActivity.this, path);
-//                }
             }
         };
         Bundle args = getIntent().getExtras();

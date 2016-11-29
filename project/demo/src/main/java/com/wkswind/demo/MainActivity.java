@@ -1,12 +1,12 @@
 package com.wkswind.demo;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import rx.functions.Action1;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
     private static final int OVERLAY_PERMISSION_REQ_CODE = 0x1;
     private OnlineItem item;
     @Override
@@ -32,8 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     if(permission.name.equalsIgnoreCase(Manifest.permission.SYSTEM_ALERT_WINDOW)){
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             if (!Settings.canDrawOverlays(MainActivity.this)){
-                                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName()));
-                                startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+                                requestSystemAlertWindowPermission();
                             }
                         }
                     }else{
@@ -44,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
         };
         RxPermissions rxPermissions = new RxPermissions(this);
         ArrayList<String> permissions = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            permissions.add(Manifest.permission.INSTALL_SHORTCUT);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            permissions.add(Manifest.permission.INSTALL_SHORTCUT);
+//        }
         permissions.add(Manifest.permission.CHANGE_WIFI_STATE);
         permissions.add(Manifest.permission.WAKE_LOCK);
         permissions.add(Manifest.permission.READ_PHONE_STATE);
@@ -93,6 +92,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void requestSystemAlertWindowPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + MainActivity.this.getPackageName()));
+        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -100,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, "请在悬浮窗管理中允许本应用", Toast.LENGTH_SHORT).show();
+                    requestSystemAlertWindowPermission();
                 }
             }
         }
