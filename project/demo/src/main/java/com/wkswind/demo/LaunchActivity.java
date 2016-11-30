@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadLine;
+import com.liulishuo.filedownloader.FileDownloadLineAsync;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.morgoo.droidplugin.pm.PluginManager;
@@ -52,6 +54,7 @@ public class LaunchActivity extends Activity {
         progressContainer = findViewById(R.id.progress_container);
 
         FileDownloader.getImpl().bindService();
+
         pm = getPackageManager();
         installAction = new Action1<Integer>() {
             @Override
@@ -194,26 +197,33 @@ public class LaunchActivity extends Activity {
     }
 
     private void downloadOnlineItem() {
-        int status = FileDownloader.getImpl().getStatus(item.url, path);
-        if(status == FileDownloadStatus.completed) {
-            installPlugin(path);
-        }else {
-            label.setText(R.string.download);
-            FileDownloader.getImpl().create(item.url).setPath(path).setListener(new FileDownloadListenerAdapter(this){
+        FileDownloader.getImpl().bindService(new Runnable() {
+            @Override
+            public void run() {
+                int status = FileDownloader.getImpl().getStatus(item.url, path);
+                if(status == FileDownloadStatus.completed) {
+                    installPlugin(path);
+                }else {
+                    label.setText(R.string.download);
+                    FileDownloader.getImpl().create(item.url).setPath(path).setListener(new FileDownloadListenerAdapter(LaunchActivity.this){
 
-                @Override
-                protected void completed(BaseDownloadTask task) {
-                    super.completed(task);
-                    installPlugin(task.getTargetFilePath());
-                }
+                        @Override
+                        protected void completed(BaseDownloadTask task) {
+                            super.completed(task);
+                            installPlugin(task.getTargetFilePath());
+                        }
 
-                @Override
-                protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                    super.progress(task, soFarBytes, totalBytes);
-                    progressBar.setProgress((int) (1f * soFarBytes / totalBytes * 100));
+                        @Override
+                        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                            super.progress(task, soFarBytes, totalBytes);
+                            progressBar.setProgress((int) (1f * soFarBytes / totalBytes * 100));
+                        }
+                    }).start();
                 }
-            }).start();
-        }
+            }
+        });
+
+
     }
 
     private void installPlugin(String path) {
