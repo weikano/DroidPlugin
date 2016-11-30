@@ -54,9 +54,9 @@ class Utils {
 
     static String getDownloadPath(Context context, String url) {
         String fileName = URLUtil.guessFileName(url, null, MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-//        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
         //有些机型在4.4之后会限制外部SD卡的文件写入，所以干脆放到内部cache里面
-        File file = new File(context.getCacheDir(), fileName);
+//        File file = new File(context.getCacheDir(), fileName);
         return file.getAbsolutePath();
     }
 
