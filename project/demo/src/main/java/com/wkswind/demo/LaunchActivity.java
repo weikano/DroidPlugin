@@ -22,11 +22,13 @@ import com.liulishuo.filedownloader.FileDownloadLineAsync;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.model.FileDownloadStatus;
 import com.morgoo.droidplugin.pm.PluginManager;
+import com.morgoo.helper.Log;
 import com.morgoo.helper.compat.PackageManagerCompat;
 import com.tbruyelle.rxpermissions.Permission;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,7 +40,7 @@ public class LaunchActivity extends Activity {
     private String path;
     private OnlineItem item = OnlineItem.fakeItem();
 
-    private TextView label;
+    private TextView label, progress;
     private ProgressBar progressBar;
     private View progressContainer;
 
@@ -52,9 +54,7 @@ public class LaunchActivity extends Activity {
         progressBar = (ProgressBar) findViewById(R.id.progress);
         label = (TextView) findViewById(R.id.info);
         progressContainer = findViewById(R.id.progress_container);
-
-        FileDownloader.getImpl().bindService();
-
+        progress = (TextView) findViewById(R.id.progress_number);
         pm = getPackageManager();
         installAction = new Action1<Integer>() {
             @Override
@@ -76,12 +76,12 @@ public class LaunchActivity extends Activity {
             }
         };
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(LaunchActivity.this)){
+            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
                 requestSystemAlertWindowPermission();
-            }else{
+            } else {
                 requestPermissions();
             }
-        }else{
+        } else {
             requestPermissions();
         }
     }
@@ -89,13 +89,14 @@ public class LaunchActivity extends Activity {
     private void requestPermissions() {
         Subscriber<Permission> permissionSubscriber = new Subscriber<Permission>() {
             boolean allPermissionsGranted = true;
+
             @Override
             public void onCompleted() {
-                if(allPermissionsGranted && item != null) {
+                if (allPermissionsGranted && item != null) {
                     progressContainer.setVisibility(View.VISIBLE);
                     path = Utils.getDownloadPath(LaunchActivity.this, item.url);
                     downloadOnlineItem();
-                }else{
+                } else {
                     Toast.makeText(LaunchActivity.this, "有权限未获取到，请在应用设置中允许后重新打开", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -109,14 +110,14 @@ public class LaunchActivity extends Activity {
             @Override
             public void onNext(Permission permission) {
                 allPermissionsGranted = allPermissionsGranted && permission.granted;
-                if(!permission.granted){
-                    if(permission.name.equalsIgnoreCase(Manifest.permission.SYSTEM_ALERT_WINDOW)){
+                if (!permission.granted) {
+                    if (permission.name.equalsIgnoreCase(Manifest.permission.SYSTEM_ALERT_WINDOW)) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (!Settings.canDrawOverlays(LaunchActivity.this)){
+                            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
                                 requestSystemAlertWindowPermission();
                             }
                         }
-                    }else{
+                    } else {
                         Toast.makeText(LaunchActivity.this, permission.name + "没有获得权限", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -140,15 +141,11 @@ public class LaunchActivity extends Activity {
 //        };
         RxPermissions rxPermissions = new RxPermissions(this);
         ArrayList<String> permissions = new ArrayList<>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            permissions.add(Manifest.permission.INSTALL_SHORTCUT);
-        }
+        permissions.add(Manifest.permission.INSTALL_SHORTCUT);
         permissions.add(Manifest.permission.CHANGE_WIFI_STATE);
         permissions.add(Manifest.permission.WAKE_LOCK);
         permissions.add(Manifest.permission.READ_PHONE_STATE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
+        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
         permissions.add(Manifest.permission.VIBRATE);
         permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -189,7 +186,7 @@ public class LaunchActivity extends Activity {
                 if (!Settings.canDrawOverlays(this)) {
                     Toast.makeText(this, "请在悬浮窗管理中允许本应用", Toast.LENGTH_SHORT).show();
                     requestSystemAlertWindowPermission();
-                }else{
+                } else {
                     requestPermissions();
                 }
             }
@@ -201,11 +198,17 @@ public class LaunchActivity extends Activity {
             @Override
             public void run() {
                 int status = FileDownloader.getImpl().getStatus(item.url, path);
-                if(status == FileDownloadStatus.completed) {
+                if (status == FileDownloadStatus.completed) {
                     installPlugin(path);
-                }else {
+                } else {
                     label.setText(R.string.download);
-                    FileDownloader.getImpl().create(item.url).setPath(path).setListener(new FileDownloadListenerAdapter(LaunchActivity.this){
+                    FileDownloader.getImpl().create(item.url).setPath(path).setListener(new FileDownloadListenerAdapter(LaunchActivity.this) {
+                        @Override
+                        protected void error(BaseDownloadTask task, Throwable e) {
+                            super.error(task, e);
+                            android.util.Log.e("ERROR", task.getTargetFilePath(), e);
+                            label.setText(R.string.install_failed);
+                        }
 
                         @Override
                         protected void completed(BaseDownloadTask task) {
@@ -216,7 +219,9 @@ public class LaunchActivity extends Activity {
                         @Override
                         protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                             super.progress(task, soFarBytes, totalBytes);
-                            progressBar.setProgress((int) (1f * soFarBytes / totalBytes * 100));
+                            int progressValue = (int) (1f * soFarBytes / totalBytes * 100);
+                            progressBar.setProgress(progressValue);
+                            progress.setText(String.format(Locale.getDefault(), "%d%%", progressValue));
                         }
                     }).start();
                 }
@@ -228,12 +233,12 @@ public class LaunchActivity extends Activity {
 
     private void installPlugin(String path) {
         final PackageInfo info = pm.getPackageArchiveInfo(path, 0);
-        if(PluginManager.getInstance().isConnected()) {
+        if (PluginManager.getInstance().isConnected()) {
             try {
-                if(PluginManager.getInstance().isPluginPackage(info.packageName)) {
+                if (PluginManager.getInstance().isPluginPackage(info.packageName)) {
                     launch(path);
                     finish();
-                }else{
+                } else {
                     label.setText(R.string.install);
                     Utils.doInstallRx(path).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(installAction);
                 }

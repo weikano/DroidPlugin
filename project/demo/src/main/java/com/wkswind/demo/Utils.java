@@ -34,27 +34,29 @@ class Utils {
         context.startActivity(intent);
     }
 
-    static void createShortCut(Context context, String path) {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo info = pm.getPackageArchiveInfo(path, 0);
-        Intent shortcutIntent = new Intent(context, LaunchActivity.class);
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        shortcutIntent.putExtra(OnlineItem.class.getName(), path);
-
-
-        Intent addIntent = new Intent();
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
-        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "传奇枭雄");
-        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        context.sendBroadcast(addIntent);
-    }
+//    static void createShortCut(Context context, String path) {
+//        PackageManager pm = context.getPackageManager();
+//        PackageInfo info = pm.getPackageArchiveInfo(path, 0);
+//        Intent shortcutIntent = new Intent(context, LaunchActivity.class);
+//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        shortcutIntent.putExtra(OnlineItem.class.getName(), path);
+//
+//
+//        Intent addIntent = new Intent();
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.ic_launcher));
+//        addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "传奇枭雄");
+//        addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+//        context.sendBroadcast(addIntent);
+//    }
 
 
     static String getDownloadPath(Context context, String url) {
         String fileName = URLUtil.guessFileName(url, null, MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+//        File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName);
+        //有些机型在4.4之后会限制外部SD卡的文件写入，所以干脆放到内部cache里面
+        File file = new File(context.getCacheDir(), fileName);
         return file.getAbsolutePath();
     }
 
