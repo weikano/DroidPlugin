@@ -61,42 +61,42 @@ public class IMountServiceHookHandle extends BaseHookHandle {
 
 
     private class mkdirs extends HookedMethodHandler {
-        private ArrayList<String> disabledVolumes = new ArrayList<>();
-        private String primaryVolumn ;
+//        private ArrayList<String> disabledVolumes = new ArrayList<>();
+//        private String primaryVolumn ;
         private mkdirs(Context context) {
             super(context);
-            mountVolumePaths();
+//            mountVolumePaths();
         }
 
-        private void mountVolumePaths(){
-            StorageManager sm = (StorageManager) mHostContext.getSystemService(Context.STORAGE_SERVICE);
-            try {
-                Class<StorageManager> clazz = StorageManager.class;
-                Method getVolumeListMethod = clazz.getMethod("getVolumeList");
-                if(getVolumeListMethod != null) {
-                    Object volumeList = getVolumeListMethod.invoke(sm);
-                    if(volumeList != null){
-                        int length = Array.getLength(volumeList);
-                        for(int i=0;i<length;i++){
-                            Object volume = Array.get(volumeList, i);
-                            Log.i("StorageManager", String.valueOf(volume));
-                            Object mState = FieldUtils.readField(volume,"mState", true);
-                            if(!mState.equals("mounted")){
-                                disabledVolumes.add(String.valueOf(FieldUtils.readField(volume,"mPath", true)));
-                            }else{
-                                primaryVolumn = String.valueOf(FieldUtils.readField(volume,"mPath", true));
-                            }
-                        }
-                    }
-                }
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+//        private void mountVolumePaths(){
+//            StorageManager sm = (StorageManager) mHostContext.getSystemService(Context.STORAGE_SERVICE);
+//            try {
+//                Class<StorageManager> clazz = StorageManager.class;
+//                Method getVolumeListMethod = clazz.getMethod("getVolumeList");
+//                if(getVolumeListMethod != null) {
+//                    Object volumeList = getVolumeListMethod.invoke(sm);
+//                    if(volumeList != null){
+//                        int length = Array.getLength(volumeList);
+//                        for(int i=0;i<length;i++){
+//                            Object volume = Array.get(volumeList, i);
+//                            Log.i("StorageManager", String.valueOf(volume));
+//                            Object mState = FieldUtils.readField(volume,"mState", true);
+//                            if(!mState.equals("mounted")){
+//                                disabledVolumes.add(String.valueOf(FieldUtils.readField(volume,"mPath", true)));
+//                            }else{
+//                                primaryVolumn = String.valueOf(FieldUtils.readField(volume,"mPath", true));
+//                            }
+//                        }
+//                    }
+//                }
+//            } catch (NoSuchMethodException e) {
+//                e.printStackTrace();
+//            } catch (InvocationTargetException e) {
+//                e.printStackTrace();
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 
         //  /sdcard/Android/data/com.example.plugin/fdfdfdfd.fdfd
@@ -173,26 +173,26 @@ public class IMountServiceHookHandle extends BaseHookHandle {
                     }
                 }
             }
-            if(args != null && args.length > 1){
-                if(args[1] instanceof String){
-                    String path = (String) args[1];
-                    Log.i("MkDirsPathBefore", path);
-                    path = convertPath(path);
-                    Log.i("MkDirsPathAfter", path);
-                    args[1] = path;
-                }
-            }
+//            if(args != null && args.length > 1){
+//                if(args[1] instanceof String){
+//                    String path = (String) args[1];
+//                    Log.i("MkDirsPathBefore", path);
+//                    path = convertPath(path);
+//                    Log.i("MkDirsPathAfter", path);
+//                    args[1] = path;
+//                }
+//            }
             return super.beforeInvoke(receiver, method, args);
         }
 //
-        private String convertPath(String path){
-            for(String volume : disabledVolumes){
-                if(path.startsWith(volume)){
-                    return path.replaceFirst(volume, primaryVolumn);
-                }
-            }
-            return path;
-        }
+//        private String convertPath(String path){
+//            for(String volume : disabledVolumes){
+//                if(path.startsWith(volume)){
+//                    return path.replaceFirst(volume, primaryVolumn);
+//                }
+//            }
+//            return path;
+//        }
     }
 
 
