@@ -30,7 +30,7 @@ class Utils {
         PackageManager pm = context.getPackageManager();
         final PackageInfo info = pm.getPackageArchiveInfo(path, 0);
         Intent intent = pm.getLaunchIntentForPackage(info.packageName);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
         context.startActivity(intent);
     }
 

@@ -36,6 +36,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by zhangyong on 14/10/18.
@@ -54,8 +55,8 @@ public class Log {
 
     private static boolean sDebug = true;
     private static boolean sFileLog = false;
-    private static final SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private static final SimpleDateFormat sFormat1 = new SimpleDateFormat("yyyyMMdd");
+    private static final SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
+    private static final SimpleDateFormat sFormat1 = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
 
     private Log() {
     }
@@ -64,7 +65,7 @@ public class Log {
 
     static {
 //        sFileLog = (sDir.exists() && sDir.isDirectory())||true;
-        sFileLog = false;
+        sFileLog = true;
         sDebug = sFileLog || BuildConfig.DEBUG || true;
     }
 
