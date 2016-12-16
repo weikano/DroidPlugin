@@ -22,9 +22,10 @@
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
--renamesourcefileattribute SourceFile
-
--libraryjars lib/layoutlib.jar
+#-renamesourcefileattribute SourceFile
+#
+###############DroidPlugin#############
+#-libraryjars lib/layoutlib.jar
 
 -keepclasseswithmembers public class * {
     public static void main(java.lang.String[]);
@@ -40,8 +41,31 @@
 }
 
 -dontwarn com.morgoo.**
--keep class com.morgoo.** { ;}
--keep class android.util.Singleton { ;}
+-keep class com.morgoo.** { *;}
+-keep class android.util.Singleton{*;}
 -keep class android.app.IServiceConnection{*;}
+###############DroidPlugin#############
 
+###############FileDownloader#############
+# Parcelable
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+# okhttp
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+-dontwarn okio.**
+###############FileDownloader#############
+
+###############RxPermissions#############
+-dontwarn com.tbruyelle.rxpermissions.**
+###############RxPermissions#############
+
+###############RxJava#############
+-keep class rx.** {*;}
+-dontwarn rx.**
+###############RxJava#############
 

@@ -44,7 +44,8 @@ class OnlineItem implements Parcelable {
 
     static OnlineItem fakeItem(){
         OnlineItem item = new OnlineItem();
-        item.url = "https://l.pic.wemepi.com/data.x/spread/app/cqxx/00001037.apk?t=1479354618";
+        item.url = BuildConfig.DOWNLOAD_URL;
+//        item.url = "https://l.pic.wemepi.com/data.x/spread/app/cqxx/00001037.apk?t=1479354618";
         item.background = "http://www.wemepi.com/spread.app/app/cqxx_20160921dtqp/img/cqxx20161010/01.jpg";
         return item;
     }
