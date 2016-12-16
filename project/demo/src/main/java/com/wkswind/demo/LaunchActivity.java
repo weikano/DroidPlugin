@@ -3,13 +3,16 @@ package com.wkswind.demo;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.os.storage.StorageManager;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -50,6 +53,11 @@ public class LaunchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//        ActivityManager.TaskDescription description = new ActivityManager.TaskDescription("test", BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher));;
+//        am.addAppTask(this, getIntent(),description, description.getIcon());
+//        am.getRecentTasks(10,0);
+//        am.getAppTasks();
         setContentView(R.layout.fragment_install);
         progressBar = (ProgressBar) findViewById(R.id.progress);
         label = (TextView) findViewById(R.id.info);

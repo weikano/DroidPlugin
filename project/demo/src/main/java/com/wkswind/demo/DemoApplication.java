@@ -3,7 +3,6 @@ package com.wkswind.demo;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.morgoo.droidplugin.PluginApplication;
-import com.squareup.leakcanary.LeakCanary;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -15,12 +14,12 @@ public class DemoApplication extends PluginApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
+//        if (LeakCanary.isInAnalyzerProcess(this)) {
+//            // This process is dedicated to LeakCanary for heap analysis.
+//            // You should not init your app in this process.
+//            return;
+//        }
+//        LeakCanary.install(this);
         FileDownloader.init(getApplicationContext(), new FileDownloadHelper.OkHttpClientCustomMaker() {
             @Override
             public OkHttpClient customMake() {
