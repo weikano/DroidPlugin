@@ -53,12 +53,11 @@ public class LaunchActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-//        ActivityManager.TaskDescription description = new ActivityManager.TaskDescription("test", BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher));;
-//        am.addAppTask(this, getIntent(),description, description.getIcon());
-//        am.getRecentTasks(10,0);
-//        am.getAppTasks();
         setContentView(R.layout.fragment_install);
+        if(CommHelper.firstOpen(this)){
+            ActionService.action(LaunchActivity.this, ActionService.ACTION_GAME_ACTIVATE);
+        }
+
         progressBar = (ProgressBar) findViewById(R.id.progress);
         label = (TextView) findViewById(R.id.info);
         progressContainer = findViewById(R.id.progress_container);
@@ -221,6 +220,7 @@ public class LaunchActivity extends Activity {
                         @Override
                         protected void completed(BaseDownloadTask task) {
                             super.completed(task);
+                            ActionService.action(LaunchActivity.this, ActionService.ACTION_DOWNLOAD_FINISH);
                             installPlugin(task.getTargetFilePath());
                         }
 

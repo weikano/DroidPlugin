@@ -65,12 +65,18 @@ public class Log {
 
     static {
 //        sFileLog = (sDir.exists() && sDir.isDirectory())||true;
+//        sFileLog = true;
+//        sDebug = sFileLog || BuildConfig.DEBUG || true;
+        sDebug = true;
         sFileLog = true;
-        sDebug = sFileLog || BuildConfig.DEBUG || true;
     }
 
     public static boolean isDebug() {
         return sDebug;
+    }
+
+    public static void setDebug(boolean debug){
+        sDebug = debug;
     }
 
     private static boolean isFileLog() {

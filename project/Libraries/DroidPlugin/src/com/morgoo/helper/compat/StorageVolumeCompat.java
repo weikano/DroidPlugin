@@ -62,7 +62,7 @@ public class StorageVolumeCompat {
         SystemVolume result = new SystemVolume();
         StorageManager sm = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
         try {
-            Object volumeList = MethodUtils.invokeMethod(sm, "getVolumeList", null);
+            Object volumeList = MethodUtils.invokeMethod(sm, "getVolumeList", (Object[]) null);
 //            Log.i(TAG, "volumeList: " + volumeList);
             if (volumeList != null) {
 //                if (volumeList instanceof Array) {

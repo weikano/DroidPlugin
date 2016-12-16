@@ -3,6 +3,7 @@ package com.wkswind.demo;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.morgoo.droidplugin.PluginApplication;
+import com.morgoo.helper.Log;
 
 import java.net.Proxy;
 import java.util.concurrent.TimeUnit;
@@ -10,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
 
-public class DemoApplication extends PluginApplication {
+public class PluginGameApplication extends PluginApplication {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,6 +21,7 @@ public class DemoApplication extends PluginApplication {
 //            return;
 //        }
 //        LeakCanary.install(this);
+        Log.setDebug(BuildConfig.DEBUG);
         FileDownloader.init(getApplicationContext(), new FileDownloadHelper.OkHttpClientCustomMaker() {
             @Override
             public OkHttpClient customMake() {
