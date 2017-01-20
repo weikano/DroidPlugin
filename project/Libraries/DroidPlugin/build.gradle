@@ -28,7 +28,7 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '25.0.2'
     defaultConfig {
         def authorityName = "com.wkswind.droidplugin_stub"
         buildConfigField "String","AUTHORITY_NAME","\"${authorityName}\""

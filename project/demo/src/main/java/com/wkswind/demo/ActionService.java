@@ -10,6 +10,9 @@ import com.morgoo.helper.Log;
 import com.weme.group.utils.DidHelper;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.FormBody;
 import okhttp3.HttpUrl;
@@ -58,5 +61,28 @@ public class ActionService extends IntentService {
         intent.setPackage(context.getPackageName());
         intent.putExtra(KEY_ACTION_ID, actionId);
         context.startService(intent);
+    }
+
+    private static class Params {
+        private Map<String,Object> params;
+        Params(Context context){
+            params = new HashMap<>();
+            params.put("channel_id",BuildConfig.CHANNEL_NAME);
+            params.put("did", DidHelper.getInstance(context).getDid());
+            params.put("equipment_id", CommHelper.getEquipmentId());
+            params.put("os_version", CommHelper.getOsVersion());
+            params.put("app_version", BuildConfig.VERSION_NAME);
+            params.put("type",2);
+        }
+        Params setParams(String key, Object value){
+            if(!TextUtils.isEmpty(key) && value != null){
+                params.put(key,value);
+            }
+            return this;
+        }
+
+        Map<String,Object> build(){
+            return params;
+        }
     }
 }
