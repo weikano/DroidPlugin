@@ -41,6 +41,4 @@ captures/
 # Keystore files
 *.jks
 
-/bin/generated/
-/bin/intermediates/
-/.gradle/
+
