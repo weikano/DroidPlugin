@@ -22,6 +22,7 @@
 
 package com.morgoo.droidplugin.pm;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningAppProcessInfo;
 import android.content.ComponentName;
@@ -1100,6 +1101,7 @@ public class IPluginManagerImpl extends IPluginManager.Stub {
         }
     }
 
+    @SuppressLint("PackageManagerGetSignatures")
     private Signature[] getSignature(String pkg, PackageManager pm) throws RemoteException, NameNotFoundException {
         PackageInfo info = getPackageInfo(pkg, PackageManager.GET_SIGNATURES);
         if (info == null) {

@@ -29,4 +29,11 @@ android {
         abortOnError false
     }
     buildToolsVersion '25.0.0'
+    defaultConfig {
+        def authorityName = "com.wkswind.droidplugin_stub"
+        buildConfigField "String","AUTHORITY_NAME","\"${authorityName}\""
+        manifestPlaceholders = [
+                authorityName : "$authorityName"
+        ]
+    }
 }

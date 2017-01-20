@@ -1,5 +1,9 @@
 package com.wkswind.demo;
 
+import android.app.Activity;
+import android.app.Application;
+import android.os.Bundle;
+
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadHelper;
 import com.morgoo.droidplugin.PluginApplication;
@@ -11,7 +15,9 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 
 
-public class PluginGameApplication extends PluginApplication {
+public class PluginGameApplication extends PluginApplication implements Application.ActivityLifecycleCallbacks {
+    private static final String TAG = PluginGameApplication.class.getSimpleName();
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -31,5 +37,41 @@ public class PluginGameApplication extends PluginApplication {
                 return builder.build();
             }
         });
+        registerActivityLifecycleCallbacks(this);
+    }
+
+    @Override
+    public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        android.util.Log.i(TAG, "onActivityCreated: " + activity);
+    }
+
+    @Override
+    public void onActivityStarted(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityResumed(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityPaused(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivityStopped(Activity activity) {
+
+    }
+
+    @Override
+    public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+    }
+
+    @Override
+    public void onActivityDestroyed(Activity activity) {
+
     }
 }

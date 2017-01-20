@@ -36,6 +36,7 @@ import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.morgoo.droidplugin.core.PluginDirHelper;
 import com.morgoo.droidplugin.reflect.FieldUtils;
@@ -55,7 +56,7 @@ import java.util.TreeMap;
  * Created by Andy Zhang(zhangyong232@gmail.com) on 2015/2/13.
  */
 public class PluginPackageParser {
-
+    private final static String TAG = PluginPackageParser.class.getSimpleName();
     private final File mPluginFile;
     private final PackageParser mParser;
     private final String mPackageName;
@@ -441,6 +442,7 @@ public class PluginPackageParser {
 
 
         applicationInfo.uid = mHostPackageInfo.applicationInfo.uid;
+        Log.i(TAG, "fixApplicationInfo: uid " + applicationInfo.uid );
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             if (applicationInfo.nativeLibraryDir == null) {

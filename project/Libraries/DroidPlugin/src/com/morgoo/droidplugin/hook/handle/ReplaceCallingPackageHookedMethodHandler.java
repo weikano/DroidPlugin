@@ -6,10 +6,13 @@ import android.os.RemoteException;
 
 import com.morgoo.droidplugin.hook.HookedMethodHandler;
 import com.morgoo.droidplugin.pm.PluginManager;
+import com.morgoo.helper.Log;
 
 import java.lang.reflect.Method;
 
 class ReplaceCallingPackageHookedMethodHandler extends HookedMethodHandler {
+
+    private static final String TAG = ReplaceCallingPackageHookedMethodHandler.class.getSimpleName();
 
     public ReplaceCallingPackageHookedMethodHandler(Context hostContext) {
         super(hostContext);
@@ -24,6 +27,7 @@ class ReplaceCallingPackageHookedMethodHandler extends HookedMethodHandler {
                         String str = ((String) args[index]);
                         if (isPackagePlugin(str)) {
                             args[index] = mHostContext.getPackageName();
+                            Log.i(TAG,String.valueOf(args[index]));
                         }
                     }
                 }

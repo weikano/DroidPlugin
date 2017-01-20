@@ -22,10 +22,14 @@
 package com.morgoo.droidplugin.hook.handle;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.morgoo.droidplugin.hook.BaseHookHandle;
 import com.morgoo.droidplugin.hook.HookedMethodHandler;
 import com.morgoo.helper.compat.IAppOpsServiceCompat;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * Created by Andy Zhang(zhangyong232@gmail.com) on  on 16/5/11.
@@ -59,6 +63,7 @@ public class IAppOpsServiceHookHandle extends BaseHookHandle {
 //            void setUserRestrictions(in Bundle restrictions, int userHandle);
 //            void removeUser(int userHandle);
 //        }
+//        sHookedMethodHandlers.put("checkPackage", new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("checkOperation",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("noteOperation",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("startOperation",new MyBaseHandler(mHostContext));
@@ -69,6 +74,7 @@ public class IAppOpsServiceHookHandle extends BaseHookHandle {
         sHookedMethodHandlers.put("permissionToOpCode",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("noteProxyOperation",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("checkPackage",new MyBaseHandler(mHostContext));
+//        sHookedMethodHandlers.put("checkPackage",new checkPackage(mHostContext));
         sHookedMethodHandlers.put("getPackagesForOps",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("getOpsForPackage",new MyBaseHandler(mHostContext));
         sHookedMethodHandlers.put("setUidMode",new MyBaseHandler(mHostContext));
@@ -91,9 +97,39 @@ public class IAppOpsServiceHookHandle extends BaseHookHandle {
         return new MyBaseHandler(mHostContext);
     }
 
-    private static class MyBaseHandler extends ReplaceCallingPackageHookedMethodHandler {
-        public MyBaseHandler(Context context) {
-            super(context);
+    @SuppressWarnings("unused")
+    private static class checkPackage extends HookedMethodHandler {
+        private static final String TAG = checkPackage.class.getSimpleName();
+        checkPackage(Context hostContext) {
+            super(hostContext);
+        }
+
+        @Override
+        protected boolean beforeInvoke(Object receiver, Method method, Object[] args) throws Throwable {
+            Log.i(TAG, String.valueOf(Arrays.asList(args)));
+            return super.beforeInvoke(receiver, method, args);
+        }
+
+        @Override
+        protected void afterInvoke(Object receiver, Method method, Object[] args, Object invokeResult) throws Throwable {
+            super.afterInvoke(receiver, method, args, invokeResult);
         }
     }
+
+    private static class MyBaseHandler extends ReplaceCallingPackageHookedMethodHandler {
+        MyBaseHandler(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected boolean beforeInvoke(Object receiver, Method method, Object[] args) throws Throwable {
+            return super.beforeInvoke(receiver, method, args);
+        }
+
+        @Override
+        protected void afterInvoke(Object receiver, Method method, Object[] args, Object invokeResult) throws Throwable {
+            super.afterInvoke(receiver, method, args, invokeResult);
+        }
+    }
+
 }

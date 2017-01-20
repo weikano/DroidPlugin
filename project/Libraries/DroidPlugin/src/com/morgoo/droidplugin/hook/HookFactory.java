@@ -59,9 +59,7 @@ import com.morgoo.helper.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Andy Zhang(zhangyong232@gmail.com) on 2015/3/2.
- */
+
 public class HookFactory {
 
     private static final String TAG = HookFactory.class.getSimpleName();
@@ -80,7 +78,7 @@ public class HookFactory {
     }
 
 
-    private List<Hook> mHookList = new ArrayList<Hook>(3);
+    private final List<Hook> mHookList = new ArrayList<>(3);
 
     public void setHookEnable(boolean enable) {
         synchronized (mHookList) {
@@ -108,7 +106,7 @@ public class HookFactory {
         }
     }
 
-    public void installHook(Hook hook, ClassLoader cl) {
+    private void installHook(Hook hook, ClassLoader cl) {
         try {
             hook.onInstall(cl);
             synchronized (mHookList) {

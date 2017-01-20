@@ -172,6 +172,7 @@ public class IActivityManagerHookHandle extends BaseHookHandle {
                 ActivityInfo activityInfo = resolveActivity(intent);
                 if (activityInfo != null && isPackagePlugin(activityInfo.packageName)) {
                     ComponentName component = selectProxyActivity(intent);
+                    android.util.Log.i(TAG, "doReplaceIntentForStartActivityAPIHigh: " + component);
                     if (component != null) {
                         Intent newIntent = new Intent();
                         try {

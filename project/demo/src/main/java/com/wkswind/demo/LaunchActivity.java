@@ -39,7 +39,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class LaunchActivity extends Activity {
-    private static final int OVERLAY_PERMISSION_REQ_CODE = 0x1;
+//    private static final int OVERLAY_PERMISSION_REQ_CODE = 0x1;
     private String path;
     private OnlineItem item = OnlineItem.fakeItem();
 
@@ -82,15 +82,16 @@ public class LaunchActivity extends Activity {
                 }
             }
         };
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
-                requestSystemAlertWindowPermission();
-            } else {
-                requestPermissions();
-            }
-        } else {
-            requestPermissions();
-        }
+        requestPermissions();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
+//                requestSystemAlertWindowPermission();
+//            } else {
+//                requestPermissions();
+//            }
+//        } else {
+//            requestPermissions();
+//        }
     }
 
     private void requestPermissions() {
@@ -118,15 +119,15 @@ public class LaunchActivity extends Activity {
             public void onNext(Permission permission) {
                 allPermissionsGranted = allPermissionsGranted && permission.granted;
                 if (!permission.granted) {
-                    if (permission.name.equalsIgnoreCase(Manifest.permission.SYSTEM_ALERT_WINDOW)) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
-                                requestSystemAlertWindowPermission();
-                            }
-                        }
-                    } else {
+//                    if (permission.name.equalsIgnoreCase(Manifest.permission.SYSTEM_ALERT_WINDOW)) {
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                            if (!Settings.canDrawOverlays(LaunchActivity.this)) {
+//                                requestSystemAlertWindowPermission();
+//                            }
+//                        }
+//                    } else {
                         Toast.makeText(LaunchActivity.this, permission.name + "没有获得权限", Toast.LENGTH_SHORT).show();
-                    }
+//                    }
                 }
             }
         };
@@ -148,11 +149,15 @@ public class LaunchActivity extends Activity {
 //        };
         RxPermissions rxPermissions = new RxPermissions(this);
         ArrayList<String> permissions = new ArrayList<>();
-        permissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            permissions.add(Manifest.permission.INSTALL_SHORTCUT);
+        }
         permissions.add(Manifest.permission.CHANGE_WIFI_STATE);
         permissions.add(Manifest.permission.WAKE_LOCK);
         permissions.add(Manifest.permission.READ_PHONE_STATE);
-        permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
         permissions.add(Manifest.permission.VIBRATE);
         permissions.add(Manifest.permission.ACCESS_NETWORK_STATE);
         permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -179,26 +184,26 @@ public class LaunchActivity extends Activity {
         rxPermissions.requestEach(arr).subscribe(permissionSubscriber);
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
-    private void requestSystemAlertWindowPermission() {
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + LaunchActivity.this.getPackageName()));
-        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
-    }
+//    @TargetApi(Build.VERSION_CODES.M)
+//    private void requestSystemAlertWindowPermission() {
+////        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + LaunchActivity.this.getPackageName()));
+////        startActivityForResult(intent, OVERLAY_PERMISSION_REQ_CODE);
+//    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (!Settings.canDrawOverlays(this)) {
-                    Toast.makeText(this, "请在悬浮窗管理中允许本应用", Toast.LENGTH_SHORT).show();
-                    requestSystemAlertWindowPermission();
-                } else {
-                    requestPermissions();
-                }
-            }
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == OVERLAY_PERMISSION_REQ_CODE) {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                if (!Settings.canDrawOverlays(this)) {
+//                    Toast.makeText(this, "请在悬浮窗管理中允许本应用", Toast.LENGTH_SHORT).show();
+//                    requestSystemAlertWindowPermission();
+//                } else {
+//                    requestPermissions();
+//                }
+//            }
+//        }
+//    }
 
     private void downloadOnlineItem() {
         FileDownloader.getImpl().bindService(new Runnable() {
