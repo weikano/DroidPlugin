@@ -11,6 +11,7 @@ import com.weme.group.utils.DidHelper;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,14 +42,20 @@ public class ActionService extends IntentService {
         if (intent != null) {
             String actionId = intent.getStringExtra(KEY_ACTION_ID);
             if(!TextUtils.isEmpty(actionId)){
-                FormBody body = new FormBody.Builder().add("v_cmd","103").add("v_class","100").add("main_game_id",GAME_ID).add("channel_id",BuildConfig.CHANNEL_NAME)
-                        .add("game_id",GAME_ID).add("action_id",actionId).add("did", DidHelper.getInstance(this).getDid())
-                        .add("equipment_id", CommHelper.getEquipmentId()).add("os_version", CommHelper.getOsVersion())
-                        .add("app_version", BuildConfig.VERSION_NAME).add("type","2").build();
-                Request request = new Request.Builder().url(url).post(body).build();
+                Map<String, Object> params = new Params(this).addParams("v_cmd", "103").addParams("v_class", "100").addParams("main_game_id", GAME_ID).addParams("game_id", GAME_ID).addParams("action_id", actionId).build();
+                FormBody.Builder bodyBuilder = new FormBody.Builder();
+                for (Map.Entry<String, Object> entry : params.entrySet()) {
+                    bodyBuilder.add(entry.getKey(), String.valueOf(entry.getValue()));
+                }
+
+//                FormBody body = new FormBody.Builder().add("v_cmd","103").add("v_class","100").add("main_game_id",GAME_ID).add("channel_id",BuildConfig.CHANNEL_NAME)
+//                        .add("game_id",GAME_ID).add("action_id",actionId).add("did", DidHelper.getInstance(this).getDid())
+//                        .add("equipment_id", CommHelper.getEquipmentId()).add("os_version", CommHelper.getOsVersion())
+//                        .add("app_version", BuildConfig.VERSION_NAME).add("type","2").build();
+                Request request = new Request.Builder().url(url).post(bodyBuilder.build()).build();
                 try {
                     Response response = client.newCall(request).execute();
-                    Log.i(TAG, String.valueOf(body)+"," + String.valueOf(response.body().string()));
+                    Log.i(TAG, String.valueOf(params)+"," + String.valueOf(response.body().string()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -74,7 +81,7 @@ public class ActionService extends IntentService {
             params.put("app_version", BuildConfig.VERSION_NAME);
             params.put("type",2);
         }
-        Params setParams(String key, Object value){
+        Params addParams(String key, Object value){
             if(!TextUtils.isEmpty(key) && value != null){
                 params.put(key,value);
             }
