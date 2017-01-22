@@ -43,7 +43,7 @@ import java.util.Arrays;
  */
 public class IWindowManagerBinderHook extends BinderHook {
 
-    private final static String SERVICE_NAME = "window";
+    private final static String SERVICE_NAME = Context.WINDOW_SERVICE;
     private static final String TAG = IWindowManagerBinderHook.class.getSimpleName();
 
     public IWindowManagerBinderHook(Context hostContext) {

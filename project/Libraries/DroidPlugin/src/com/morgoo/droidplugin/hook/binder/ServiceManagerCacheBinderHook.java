@@ -58,80 +58,28 @@ public class ServiceManagerCacheBinderHook extends Hook implements InvocationHan
         setEnable(true);
     }
 
-    //    @Override
-    private void onInstallAfterM(ClassLoader classLoader) throws Throwable {
-        Object sCacheObj = FieldUtils.readStaticField(ServiceManagerCompat.Class(), "sCache");
-        if (sCacheObj instanceof Map) {
-            Map sCache = (Map) sCacheObj;
-            Object Obj = sCache.get(mServiceName);
-            if(Obj != null){
-                sCache.remove(mServiceName);
-                IBinder mServiceIBinder = ServiceManagerCompat.getService(mServiceName);
-                if (mServiceIBinder == null) {
-                    if (Obj instanceof IBinder && !Proxy.isProxyClass(Obj.getClass())) {
-                        mServiceIBinder = ((IBinder) Obj);
-                    }
-                }
-                if (mServiceIBinder != null) {
-                    MyServiceManager.addOriginService(mServiceName, mServiceIBinder);
-                    Class clazz = mServiceIBinder.getClass();
-                    List<Class<?>> interfaces = Utils.getAllInterfaces(clazz);
-                    Class[] ifs = interfaces != null && interfaces.size() > 0 ? interfaces.toArray(new Class[interfaces.size()]) : new Class[0];
-                    IBinder mProxyServiceIBinder = (IBinder) MyProxy.newProxyInstance(clazz.getClassLoader(), ifs, this);
-                    sCache.put(mServiceName, mProxyServiceIBinder);
-                    MyServiceManager.addProxiedServiceCache(mServiceName, mProxyServiceIBinder);
-                }
-            }
-//            IBinder mServiceIBinder = null;
-//            if (Obj != null && Obj instanceof IBinder) {
-//                mServiceIBinder = (IBinder) Obj;
-//            } else {
-//                sCache.remove(mServiceName);
-//                mServiceIBinder = ServiceManagerCompat.getService(mServiceName);
-//            }
-//            if (mServiceIBinder != null) {
-//                MyServiceManager.addOriginService(mServiceName, mServiceIBinder);
-//                Class clazz = mServiceIBinder.getClass();
-//                List<Class<?>> interfaces = Utils.getAllInterfaces(clazz);
-//                Class[] ifs = interfaces != null && interfaces.size() > 0 ? interfaces.toArray(new Class[interfaces.size()]) : new Class[0];
-//                IBinder mProxyServiceIBinder = (IBinder) MyProxy.newProxyInstance(clazz.getClassLoader(), ifs, this);
-//                sCache.put(mServiceName, mProxyServiceIBinder);
-//                MyServiceManager.addProxiedServiceCache(mServiceName, mProxyServiceIBinder);
-//            }
-        }
-    }
-
-    private void onInstallBeforeN(ClassLoader classLoader) throws Throwable {
-        Object sCacheObj = FieldUtils.readStaticField(ServiceManagerCompat.Class(), "sCache");
-        if (sCacheObj instanceof Map) {
-            Map sCache = (Map) sCacheObj;
-            Object Obj = sCache.get(mServiceName);
-            if (Obj != null && false) {
-                //FIXME 已经有了怎么处理？这里我们只是把原来的给remove掉，再添加自己的。程序下次取用的时候就变成我们hook过的了。
-                //但是这样有缺陷。
-                throw new RuntimeException("Can not install binder hook for " + mServiceName);
-            } else {
-                sCache.remove(mServiceName);
-                IBinder mServiceIBinder = ServiceManagerCompat.getService(mServiceName);
-                if (mServiceIBinder != null) {
-                    MyServiceManager.addOriginService(mServiceName, mServiceIBinder);
-                    Class clazz = mServiceIBinder.getClass();
-                    List<Class<?>> interfaces = Utils.getAllInterfaces(clazz);
-                    Class[] ifs = interfaces != null && interfaces.size() > 0 ? interfaces.toArray(new Class[interfaces.size()]) : new Class[0];
-                    IBinder mProxyServiceIBinder = (IBinder) MyProxy.newProxyInstance(clazz.getClassLoader(), ifs, this);
-                    sCache.put(mServiceName, mProxyServiceIBinder);
-                    MyServiceManager.addProxiedServiceCache(mServiceName, mProxyServiceIBinder);
-                }
-            }
-        }
-    }
-
     @Override
     protected void onInstall(ClassLoader classLoader) throws Throwable {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            onInstallBeforeN(classLoader);
-        } else {
-            onInstallAfterM(classLoader);
+        Object sCacheObj = FieldUtils.readStaticField(ServiceManagerCompat.Class(), "sCache");
+        if (sCacheObj instanceof Map) {
+            Map sCache = (Map) sCacheObj;
+            Object Obj = sCache.get(mServiceName);
+            IBinder mServiceIBinder = null;
+            if (Obj != null && Obj instanceof IBinder) {
+                mServiceIBinder = (IBinder) Obj;
+            } else {
+                sCache.remove(mServiceName);
+                mServiceIBinder = ServiceManagerCompat.getService(mServiceName);
+            }
+            if (mServiceIBinder != null) {
+                MyServiceManager.addOriginService(mServiceName, mServiceIBinder);
+                Class clazz = mServiceIBinder.getClass();
+                List<Class<?>> interfaces = Utils.getAllInterfaces(clazz);
+                Class[] ifs = interfaces != null && interfaces.size() > 0 ? interfaces.toArray(new Class[interfaces.size()]) : new Class[0];
+                IBinder mProxyServiceIBinder = (IBinder) MyProxy.newProxyInstance(clazz.getClassLoader(), ifs, this);
+                sCache.put(mServiceName, mProxyServiceIBinder);
+                MyServiceManager.addProxiedServiceCache(mServiceName, mProxyServiceIBinder);
+            }
         }
     }
 

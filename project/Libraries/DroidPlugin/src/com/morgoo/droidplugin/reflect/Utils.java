@@ -46,16 +46,30 @@ public class Utils {
     }
 
     static Class<?>[] toClass(final Object... array) {
+
         if (array == null) {
             return null;
         } else if (array.length == 0) {
             return EMPTY_CLASS_ARRAY;
         }
-        final Class<?>[] classes = new Class[array.length];
+        ArrayList<Class<?>> clazzes = new ArrayList<>();
         for (int i = 0; i < array.length; i++) {
-            classes[i] = array[i] == null ? null : array[i].getClass();
+            Object o = array[i];
+            if(o != null){
+                clazzes.add(o.getClass());
+            }
         }
+        if(clazzes.isEmpty()){
+            return EMPTY_CLASS_ARRAY;
+        }
+        final Class<?>[] classes = new Class[clazzes.size()];
+        clazzes.toArray(classes);
         return classes;
+//        final Class<?>[] classes = new Class[array.length];
+//        for (int i = 0; i < array.length; i++) {
+//            classes[i] = array[i] == null ? null : array[i].getClass();
+//        }
+//        return classes;
     }
 
     static Class<?>[] nullToEmpty(final Class<?>[] array) {

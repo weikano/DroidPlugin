@@ -48,7 +48,7 @@ public abstract class ProxyHook extends Hook implements InvocationHandler {
     public void setOldObj(Object oldObj) {
         this.mOldObj = oldObj;
     }
-
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         try {
